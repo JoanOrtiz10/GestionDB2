@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14",
+    "pg-promise": "^12.6.1",
+    "redis": "^5.11.0"
+  },
+  "name": "apuesta",
+  "type": "module",
+  "main": "./main.js",
+  "scripts": {
+    "dev": "nodemon .",
+    "prod": "node ."
+  }
+}
