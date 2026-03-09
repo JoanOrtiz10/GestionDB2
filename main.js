@@ -1,10 +1,57 @@
 import express, { response } from "express"   
 import { createClient, REDIS_FLUSH_MODES } from "redis";
+import { MongoClient, ObjectId } from "mongodb";
 
 const app = express();
 
-const redis = createClient({ url : 'redis://localhost:6379' });
-redis.connect();
+//clase 9 Marzo 
+
+const client= new MongoClient("mongodb://localhost:27017")
+
+const connection = async () => {
+
+    try{
+        await client.connect();
+        return client.db("test")
+        }catch (e){
+            console.log("========ERROR======");
+            console.log(e);
+
+        }
+}
+
+app.get("/post", async (req,res)=>{
+const db = await connection();
+const torneo = db.collection("torneo")
+const result=  torneo.insertOne({
+    "nombre":'Joan',
+    "apellido ":' Ortiz'
+})
+ res.json(result)
+})
+
+
+app.get("/getMongo/:id", async (req,res)=>{
+    const {id}= req.params;
+    const db = await connection();
+    const torneo = db.collection("torneo")
+    const objectId = new ObjectId(id)
+    const result=  await torneo.findOne({ _id :objectId })
+    console.log(id,objectId);
+    res.json(result)
+
+
+})
+
+
+
+
+
+
+
+
+// const redis = createClient({ url : 'redis://localhost:6379' });
+// redis.connect();
 
 
 app.get("/save", async(req, res)=> {
