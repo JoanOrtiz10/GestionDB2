@@ -3,6 +3,7 @@ import { createClient, REDIS_FLUSH_MODES } from "redis";
 import { MongoClient, ObjectId } from "mongodb";
 
 const app = express();
+app.use(express.json())
 
 //clase 9 Marzo 
 
@@ -42,6 +43,59 @@ app.get("/getMongo/:id", async (req,res)=>{
 
 
 })
+
+//clase 10 Marzo 
+app.post("/saveTorneo", async(req,res)=>{
+    const db = await connection();
+    // const torneo = db.collection("torneo");
+    console.log (req.body);
+    // const result = await torneo.insertOne (req.body);
+    res.json(req.body);
+
+
+
+
+
+})
+
+app.post("/saveTorneos", async(req,res)=>{
+    const db = await connection();
+    const torneo = db.collection("torneo");
+    const result = await torneo.insertMany(req.body);
+  
+    // const result = await torneo.insertOne (req.body);
+    res.json(result);
+
+})
+
+app.get("/getTorneo", async(req,res)=>{
+      const db = await connection();
+    const torneo = db.collection("torneo");
+    const filtro= {
+        premio:{ $lt: 2000},
+        locacion:'cucuta'
+        
+        // tag: {$in : ['nba','juego']},
+        // premio :{$in:[1200,1900]}
+
+
+    };
+    const view ={
+        nombre:2,
+        premio:2
+
+    }
+      const data=  await torneo.find(filtro,view).toArray();
+
+    res.json(data);
+
+})
+//$ne -->es igual a diferente 
+//$gt--> igual a mayor que 
+//$gte -->mayor igual que 
+//$lt --> menor que 
+//$lte --> menor igual que 
+
 
 
 
